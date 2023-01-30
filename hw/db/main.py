@@ -10,9 +10,11 @@ query = '''create table members (
             )'''
 
 qp = queryParser(query)
-result = qp.generate_job_command()
+print("==qp==")
+print(qp)
+# result = qp.generate_job_command()
 
-print(result)
+# print(result)
 
 
 # {'mode': 'create',

@@ -2,9 +2,10 @@
 
 import socket
 
-kangsan = '192.168.0.62'
-myhome = '172.30.1.39'
-def run_client(host=myhome, port=7789):
+# kangsan = '192.168.0.62'
+# myhome = '172.30.1.39'
+jenny_in_markcloud = '192.168.0.44'
+def run_client(host=jenny_in_markcloud, port=7789):
 
     print("a")
     with socket.socket() as sock:
@@ -13,7 +14,7 @@ def run_client(host=myhome, port=7789):
 
         for _ in range(100):
             data = input(">>> ")
-            data = f'{name} 이 말합니다: {data}'
+            data = f'{name} is speaking: {data}'
             sock.sendall(data.encode())
 
             try:
