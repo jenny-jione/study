@@ -82,33 +82,30 @@ if __name__ == "__main__":
 
     print(f"== {GENRE} chart crawling start ==")
 
-    # threads = []
-    # t2 = time.time()
-    # for i, yr in enumerate(range(yr_start, yr_end+1)):
-    #     chromedriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    #     t = threading.Thread(target=get_year_chart, args=(chromedriver, yr,))
-    #     t.start()
-    #     threads.append(t)
+    threads = []
+    t2 = time.time()
+    for i, yr in enumerate(range(yr_start, yr_end+1)):
+        chromedriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        t = threading.Thread(target=get_year_chart, args=(chromedriver, yr,))
+        t.start()
+        threads.append(t)
 
-    # for thread in threads:
-    #     thread.join()
+    for thread in threads:
+        thread.join()
     
-    # print(f"thread 모든 작업({len(threads)}개) 종료, {round(time.time()-t2, 3)} 초 걸림 !")
-
-
-
+    print(f"thread 모든 작업({len(threads)}개) 종료, {round(time.time()-t2, 3)} 초 걸림 !")
 
 
     # ## 스레드x
-    print("--without threads--")
-    t1 = time.time()
+    # print("--without threads--")
+    # t1 = time.time()
 
-    for yr in range(yr_start, yr_end+1):
-        chromedriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-        year = str(yr)
-        song_list = get_year_chart(chromedriver, year)
-        # save_to_file(song_list, year)
+    # for yr in range(yr_start, yr_end+1):
+    #     chromedriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    #     year = str(yr)
+    #     song_list = get_year_chart(chromedriver, year)
+    #     # save_to_file(song_list, year)
 
 
-    print(f"모든 작업 종료, {round(time.time()-t1, 3)} 초 걸림 !")
-    print("==="*20)
+    # print(f"모든 작업 종료, {round(time.time()-t1, 3)} 초 걸림 !")
+    # print("==="*20)
