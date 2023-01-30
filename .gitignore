@@ -2,3 +2,6 @@ venv/
 .ipynb_*
 *.txt
 *.png
+__pycache__/
+*.csv
+*.DS_Store
