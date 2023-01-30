@@ -1,6 +1,7 @@
 venv/
 .ipynb_*
 *.txt
+!requirements.txt
 *.png
 __pycache__/
 *.csv
