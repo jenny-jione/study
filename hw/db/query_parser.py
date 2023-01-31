@@ -41,8 +41,6 @@ class queryParser:
             raise Exception('SYNTAX ERROR')
     
     
-    
-
     def parse_dql(self):
         target = query.split('from')[0].split('select')[-1].replace(' ', '').split(',')
         
