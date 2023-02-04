@@ -1,39 +1,48 @@
 ## 1. 쿼리 파서 부분
 
+
+# dql : select
+# dml : insert, update, delete
+# ddl : create, alter, rebane, trabcate, drop
+
 class queryParser:
     
     def __init__(self, query):
+        # 입력 받을 커맨드 정의
         self.dql = ['select']
         self.dml = ['insert', 'update', 'delete']
         self.ddl = ['create', 'alter', 'drop']
         
         self.command_set = {}
         
-        # 우리 DBMS의 한계!
-        self.q = query.lower().strip().split()
+        # 입력 쿼리 정규화
+        self.origin_query = query
+        self.q = query.replace(',', '').lower().strip().split()
         
         self.command_set['mode'] = self.q[0]
-        self.command_set['target'] = self.q[1]
-        self.command_set['name'] = self.q[2]
+        # self.command_set['target'] = self.q[1]
+        # self.command_set['name'] = self.q[2]
         self.command_set['task'] = {}
         self.command_set['options'] = {}
+        
+        print(self.command_set)
+        print("-command set-")    
     
     
+    # 쿼리 기본 문법 확인: 어떤 질의인지 확인
     def generate_job_command(self):
+        # DQL 질의 요청시 : SELECT
         if self.q[0] in self.dql:
-            print("dql")
             self.parse_dql()
             return self.command_set
 
-        # DML 질의 요청시
+        # DML 질의 요청시 : INSERT, UPDATE, DELETE
         elif self.q[0] in self.dml:
-            print("dml")
             self.parse_dml()
             return self.command_set
         
-        # DDL 질의 요청시
+        # DDL 질의 요청시 : CREATE, ALTER, RENAME, TRUNCATE, DROP
         elif self.q[0] in self.ddl:
-            print("ddl")
             self.parse_ddl()
             return self.command_set
         
@@ -42,37 +51,67 @@ class queryParser:
     
     
     def parse_dql(self):
-        target = query.split('from')[0].split('select')[-1].replace(' ', '').split(',')
+        print("parse_dql :: select")
+        print(self.q)
+        print("-- self.q --")
+        
+        select_idx = self.q.index('select')
+        print(select_idx)
+        
+        target_start = self.q.index('select')+1
+        target_end = self.q.index('from')
+        
+        target = self.q[target_start:target_end]
+        # print(target)
         
         if len(target) == 1:
             self.command_set['target'] = target[0]
         else:
             self.command_set['target'] = target
+            
+        print(self.command_set['target'])
         
-        self.command_set['name'] = self.q[3]
+        self.command_set['name'] = self.q[target_end+1]
         
-        option_set = query.split('from')[-1].split()[1:]
+        print('table name: ', self.command_set['name'])
         
-        condition = option_set[0]
-        sub = option_set[1]
-        operand = option_set[2]
-        obj = option_set[3]
         
-        self.command_set['options']['condition'] = condition
-        self.command_set['options']['subject'] = sub 
-        self.command_set['options']['operand'] = operand
-        self.command_set['options']['object'] = obj
-    
-    
+        print(self.q)
+        print(len(self.q))
+        print("-----")
+        
+        # target : select a, b, c from 에서 a, b, c를 구하기
+        # target = query.split('from')[0].split('select')[-1].replace(' ', '').split(',')
+        
+        # if len(target) == 1:
+        #     self.command_set['target'] = target[0]
+        # else:
+        #     self.command_set['target'] = target
+        
+        # self.command_set['name'] = self.q[3]
+        
+        # option_set = query.split('from')[-1].split()[1:]
+        
+        # condition = option_set[0]
+        # sub = option_set[1]
+        # operand = option_set[2]
+        # obj = option_set[3]
+        
+        # self.command_set['options']['condition'] = condition
+        # self.command_set['options']['subject'] = sub 
+        # self.command_set['options']['operand'] = operand
+        # self.command_set['options']['object'] = obj
     
     
     def parse_dml(self):
-        
+        print("== parse_dml == insert, update, delete")
         # 메타데이터 파싱
         if self.command_set['mode'] == 'insert':
             
             # 선택한 컬럼값들을 변경할때 -> 모든 컬럼값이 아니라 하나이므로
             col = self.q[2]
+            print(col)
+            
             if '(' in col and ')' in col:
                 insert_keys= col.split('(')[1].split(')')[0].split(',')
                 
@@ -110,7 +149,7 @@ class queryParser:
                 self.command_set['task'].setdefault('type', []).append(command[1])
         
         
-        # DDL 질의에서 change 요청시
+        # DDL 질의에서 change(alter) 요청시
         elif self.command_set['mode'] == 'alter':
             
             # alter 문에서 작성한 메타데이터 파싱

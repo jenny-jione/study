@@ -1,4 +1,5 @@
 from query_parser import *
+from database import *
 
 # 우리 parser의 한계로 create 명령문은 이런식으로만 들어갑니다!
 # 컴파일러 개발이 어려운 프로그래밍중 하나인 이유가 이런 이유도 있죠...
@@ -8,13 +9,29 @@ query = '''create table members (
                 name varchar(10),
                 age int
             )'''
+            
+            
+query_select_all = '''select * from members'''
 
-qp = queryParser(query)
-print("==qp==")
-print(qp)
-# result = qp.generate_job_command()
+query_select_sth = '''
+                        select name, age
+                        from members
+'''
+# where 절도 ...
 
-# print(result)
+query3 = '''
+            insert into members
+            values(1,"jenny",29)
+            '''
+
+
+db = ourDatabase()
+qp = queryParser(query_select_sth)
+db.command_executor(qp.generate_job_command())
+
+
+# for k,v in result.items():
+#     print(k, v)
 
 
 # {'mode': 'create',
