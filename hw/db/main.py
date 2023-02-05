@@ -36,8 +36,10 @@ query_insert = '''
 
 
 db = ourDatabase()
+# qp = queryParser(query_insert)
+# qp = queryParser(query_select_all)
 # qp = queryParser(query_select_sth)
-qp = queryParser(query_insert)
+qp = queryParser(query_select_where)
 db.command_executor(qp.generate_job_command())
 
 

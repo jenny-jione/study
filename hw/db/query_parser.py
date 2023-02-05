@@ -12,7 +12,7 @@ class queryParser:
         self.dql = ['select']
         self.dml = ['insert', 'update', 'delete']
         self.ddl = ['create', 'alter', 'drop']
-        
+
         self.command_set = {}
         
         # 입력 쿼리 정규화
@@ -27,13 +27,14 @@ class queryParser:
         print("------------")
         
         self.command_set['mode'] = self.q[0]
-        # self.command_set['target'] = self.q[1]
-        # self.command_set['name'] = self.q[2]
+        self.command_set['target'] = self.q[1]
+        self.command_set['name'] = self.q[2]
         self.command_set['task'] = {}
         self.command_set['options'] = {}
         
-        print(self.command_set)
         print("-command set-")    
+        print(self.command_set)
+        print("-------------")
     
     
     # 쿼리 기본 문법 확인: 어떤 질의인지 확인
@@ -60,52 +61,63 @@ class queryParser:
     def parse_dql(self):
         print("parse_dql :: select")
         
-        select_idx = self.q.index('select')
-        print(select_idx)
+        # select_idx = self.q.index('select')
+        # print(select_idx)
         
-        target_start = self.q.index('select')+1
-        target_end = self.q.index('from')
+        # target_start = self.q.index('select')+1
+        # target_end = self.q.index('from')
         
-        target = self.q[target_start:target_end]
-        # print(target)
-        
-        if len(target) == 1:
-            self.command_set['target'] = target[0]
-        else:
-            self.command_set['target'] = target
-            
-        print(self.command_set['target'])
-        
-        self.command_set['name'] = self.q[target_end+1]
-        
-        print('table name: ', self.command_set['name'])
-        
-        
-        print(self.q)
-        print(len(self.q))
-        print("-----")
-        
-        # target : select a, b, c from 에서 a, b, c를 구하기
-        # target = query.split('from')[0].split('select')[-1].replace(' ', '').split(',')
+        # target = self.q[target_start:target_end]
+        # # print(target)
         
         # if len(target) == 1:
         #     self.command_set['target'] = target[0]
         # else:
         #     self.command_set['target'] = target
+            
+        # print(self.command_set['target'])
         
-        # self.command_set['name'] = self.q[3]
+        # self.command_set['name'] = self.q[target_end+1]
+        
+        # print('table name: ', self.command_set['name'])
+    
+        # print(self.q)
+        # print(len(self.q))
+        # print("-----")
+
+
+        
+        # target : select a, b, c from 에서 a, b, c를 구하기
+        # target = self.origin_query.split('from')[0].split('select')[-1].replace(' ', '').split(',')
+        target = self.origin_query.split('from')[0].split('select')[-1]\
+            .replace(' ', '').replace('\n', '').split(',')
+        
+        print("target?")
+        print(target)
+
+        if len(target) == 1:
+            self.command_set['target'] = target[0]
+        else:
+            self.command_set['target'] = target
+        
+        self.command_set['name'] = self.q[3]
+
+        print("split from")
+        name = self.origin_query.split('from')[1].split(' ')
+        print(name)
         
         # option_set = query.split('from')[-1].split()[1:]
+        option_set = self.origin_query.split('from')[-1].split()[1:]
         
-        # condition = option_set[0]
-        # sub = option_set[1]
-        # operand = option_set[2]
-        # obj = option_set[3]
+        condition = option_set[0]
+        sub = option_set[1]
+        operand = option_set[2]
+        obj = option_set[3]
         
-        # self.command_set['options']['condition'] = condition
-        # self.command_set['options']['subject'] = sub 
-        # self.command_set['options']['operand'] = operand
-        # self.command_set['options']['object'] = obj
+        self.command_set['options']['condition'] = condition
+        self.command_set['options']['subject'] = sub 
+        self.command_set['options']['operand'] = operand
+        self.command_set['options']['object'] = obj
     
     
     def parse_dml(self):
