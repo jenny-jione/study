@@ -7,12 +7,16 @@ class ourDatabase:
         pass
     
     def command_executor(self, command):
+        print("call command_executer ...")
         
         mode = command['mode']
         target = command['target']
         name = command['name']
         task = command['task']
         options = command['options']
+
+        print(f"[ mode ] == {mode}")
+        print(f"**comand == {command}")
 
         if mode == 'create':
             self.create(**command)
@@ -30,7 +34,6 @@ class ourDatabase:
             pass
             
         elif mode == 'select':
-            print("hihihihihihi")
             self.select(**command)
         
             
@@ -137,6 +140,7 @@ class ourDatabase:
     
     
     def select(self, **kwargs):
+        print(kwargs)
         table_name = kwargs['name']
         print("table name:", table_name)
         

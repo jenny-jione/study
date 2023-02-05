@@ -17,7 +17,14 @@ class queryParser:
         
         # 입력 쿼리 정규화
         self.origin_query = query
-        self.q = query.replace(',', '').lower().strip().split()
+        # self.q = query.replace(',', '').lower().strip().split()
+
+        self.q = query.lower().strip().split()
+
+        print("-- self.q --")
+        print(self.q)
+        print(type(self.q), len(self.q))
+        print("------------")
         
         self.command_set['mode'] = self.q[0]
         # self.command_set['target'] = self.q[1]
@@ -52,8 +59,6 @@ class queryParser:
     
     def parse_dql(self):
         print("parse_dql :: select")
-        print(self.q)
-        print("-- self.q --")
         
         select_idx = self.q.index('select')
         print(select_idx)
@@ -108,8 +113,8 @@ class queryParser:
         # 메타데이터 파싱
         if self.command_set['mode'] == 'insert':
             
-            # 선택한 컬럼값들을 변경할때 -> 모든 컬럼값이 아니라 하나이므로
             col = self.q[2]
+            print("-- col --")
             print(col)
             
             if '(' in col and ')' in col:
@@ -126,6 +131,7 @@ class queryParser:
                 self.command_set['task'].setdefault('values',[]).append(value)
             
                 
+        # 선택한 컬럼값들을 변경할때 -> 모든 컬럼값이 아니라 하나이므로
         elif self.command_set['mode'] == 'update':
             pass
         

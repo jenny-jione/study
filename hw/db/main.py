@@ -18,15 +18,26 @@ query_select_sth = '''
                         from members
 '''
 # where 절도 ...
+query_select_where = '''
+                        select name, age
+                        from members
+                        where name = 'jenny'
+'''
 
 query3 = '''
             insert into members
             values(1,"jenny",29)
             '''
 
+query_insert = '''
+                    insert into members
+                    values(2,"jimin",29)
+'''
+
 
 db = ourDatabase()
-qp = queryParser(query_select_sth)
+# qp = queryParser(query_select_sth)
+qp = queryParser(query_insert)
 db.command_executor(qp.generate_job_command())
 
 
