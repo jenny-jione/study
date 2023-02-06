@@ -61,64 +61,46 @@ class queryParser:
     def parse_dql(self):
         print("parse_dql :: select")
         
-        # select_idx = self.q.index('select')
-        # print(select_idx)
-        
-        # target_start = self.q.index('select')+1
-        # target_end = self.q.index('from')
-        
-        # target = self.q[target_start:target_end]
-        # # print(target)
-        
-        # if len(target) == 1:
-        #     self.command_set['target'] = target[0]
-        # else:
-        #     self.command_set['target'] = target
-            
-        # print(self.command_set['target'])
-        
-        # self.command_set['name'] = self.q[target_end+1]
-        
-        # print('table name: ', self.command_set['name'])
-    
-        # print(self.q)
-        # print(len(self.q))
-        # print("-----")
-
-
-        
         # target : select a, b, c from 에서 a, b, c를 구하기
-        # target = self.origin_query.split('from')[0].split('select')[-1].replace(' ', '').split(',')
-        target = self.origin_query.split('from')[0].split('select')[-1]\
-            .replace(' ', '').replace('\n', '').split(',')
+        select_idx = self.q.index('select')
+        print(select_idx)
         
-        print("target?")
-        print(target)
-
+        target_start = self.q.index('select')+1
+        target_end = self.q.index('from')
+        
+        target = self.q[target_start:target_end]
+        print("target::::",target)
+        
         if len(target) == 1:
-            self.command_set['target'] = target[0]
+            self.command_set['target'] = target[0].replace(',', '')
         else:
-            self.command_set['target'] = target
+            res = []
+            for tg in target:
+                res.append(tg.replace(',', ''))
+                
+            self.command_set['target'] = res
+            
+        print(self.command_set['target'])
         
-        self.command_set['name'] = self.q[3]
-
-        print("split from")
-        name = self.origin_query.split('from')[1].split(' ')
-        print(name)
+        self.command_set['name'] = self.q[target_end+1]
         
-        # option_set = query.split('from')[-1].split()[1:]
-        option_set = self.origin_query.split('from')[-1].split()[1:]
+        if "where" in self.q:
+            where_idx = self.q.index('where')
+            option_set = self.q[where_idx:]
         
-        condition = option_set[0]
-        sub = option_set[1]
-        operand = option_set[2]
-        obj = option_set[3]
+        # if option_set:
+            condition = option_set[0]
+            sub = option_set[1]
+            operand = option_set[2]
+            obj = option_set[3]
+            
+            self.command_set['options']['condition'] = condition
+            self.command_set['options']['subject'] = sub 
+            self.command_set['options']['operand'] = operand
+            self.command_set['options']['object'] = obj
         
-        self.command_set['options']['condition'] = condition
-        self.command_set['options']['subject'] = sub 
-        self.command_set['options']['operand'] = operand
-        self.command_set['options']['object'] = obj
-    
+        print(self.command_set['options'])
+        
     
     def parse_dml(self):
         print("== parse_dml == insert, update, delete")
@@ -137,11 +119,13 @@ class queryParser:
                 for insert_key in insert_keys:
                     self.command_set['task'].setdefault('column', []).append(insert_key)
                     
-                    
+            print(self.command_set['task'])
+            print("--")
             values = self.q[-1].split('(')[1].split(')')[0].split(',')
             for value in values:
+                print("valueeee:",value)
                 self.command_set['task'].setdefault('values',[]).append(value)
-            
+            print(self.command_set['task'])
                 
         # 선택한 컬럼값들을 변경할때 -> 모든 컬럼값이 아니라 하나이므로
         elif self.command_set['mode'] == 'update':

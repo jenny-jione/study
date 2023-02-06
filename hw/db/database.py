@@ -107,6 +107,7 @@ class ourDatabase:
             raise Exception('No such table')
         
         values = kwargs['task']['values']
+        print("val::::",values)
         
         with open(table_name, 'r') as f:
             data = f.readline()
@@ -140,23 +141,46 @@ class ourDatabase:
     
     
     def select(self, **kwargs):
+        print("-kwargs-")
         print(kwargs)
+        target = kwargs['target']
+        
         table_name = kwargs['name']
         print("table name:", table_name)
         
-        # if not os.path.isfile(table_name):
-        #     raise Exception(f"No Such Database:{table_name}")
+        if not os.path.isfile(table_name):
+            raise Exception(f"No Such Database:{table_name}")
         
-        # with open(table_name, 'r') as f:
-        #     datas = f.readlines()
+        option_set = kwargs['options']
+        print("options:", option_set)
+        
+        with open(table_name, 'r') as f:
+            datas = f.readlines()
         
         # print(datas)
         
-        # trimmed = []
-        # for data in datas:
-        #     data = data.replace('\n', '')
-        #     data = ast.literal_eval(data)
-        #     trimmed.append(data)
+        trimmed = []
+        for data in datas:
+            data = data.replace('\n', '')
+            data = ast.literal_eval(data)
+            trimmed.append(data)
         
-        # for t in trimmed:
-        #     print(t)
+        cols = trimmed[0]
+        print("-cols-")
+        print(cols)
+        
+        if target == "*":
+            pass
+        else:
+            indices = []
+            for tg in target:
+                if tg in cols:
+                    indices.append(cols.index(tg))
+        print(indices)
+        
+        print("--")
+        for t in trimmed[1:]:
+            tmp = []
+            for idx in indices:
+                tmp.append(t[idx])
+            print(tmp)
