@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-import re
-import sys
 """
     초성 중성 종성 분리 하기
 	유니코드 한글은 0xAC00 으로부터
@@ -33,37 +30,24 @@ JONGSUNG_LIST = [' ', 'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄹ', '�
 
 
 def convert(test_keyword):
+    result = []
     split_keyword_list = list(test_keyword)
-    #print(split_keyword_list)
 
     result = list()
     for keyword in split_keyword_list:
-        # 한글 여부 check 후 분리
-        if re.match('.*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*', keyword) is not None:
-            char_code = ord(keyword) - BASE_CODE
-            char1 = int(char_code / CHOSUNG)
-            result.append(CHOSUNG_LIST[char1])
-            print('초성 : {}'.format(CHOSUNG_LIST[char1]))
-            char2 = int((char_code - (CHOSUNG * char1)) / JUNGSUNG)
-            result.append(JUNGSUNG_LIST[char2])
-            print('중성 : {}'.format(JUNGSUNG_LIST[char2]))
-            char3 = int((char_code - (CHOSUNG * char1) - (JUNGSUNG * char2)))
-            if char3==0:
-                result.append('#')
-            else:
-                result.append(JONGSUNG_LIST[char3])
-            print('종성 : {}'.format(JONGSUNG_LIST[char3]))
-        else:
-            result.append(keyword)
-    # result
-    print("".join(result))
+        kw = []
+        char_code = ord(keyword) - BASE_CODE
 
-if __name__ == '__main__':
-    
-    if len(sys.argv) > 1:
-        inputfile = open(sys.argv[1], 'r')
-        for line in inputfile.readlines():
-            convert(line)
-    else:
-        test_keyword = input("input your text:")
-        convert(test_keyword)
+        char1 = int(char_code / CHOSUNG)
+        first = CHOSUNG_LIST[char1] # 초성 한글
+        kw.append(first)
+        
+        char2 = int((char_code - (CHOSUNG * char1)) / JUNGSUNG)
+        char3 = int((char_code - (CHOSUNG * char1) - (JUNGSUNG * char2)))
+        last = JONGSUNG_LIST[char3] # 종성 한글
+        if char3 != 0:
+            kw.append(last+'*')
+
+        result.append(kw)
+
+    return result
