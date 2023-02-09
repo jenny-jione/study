@@ -20,11 +20,13 @@ if __name__ == '__main__':
     else:
         # test_keyword = input("input your text:")
         # test_keywords = ["윈도우즈", "윈도우스", "윈도즈", "프롤로그", "사운드", "싸운드", "패킷", "패키트", "팩킷", "휠터"]
-        test_keywords = ["너까래", "넛까래", "디지털", "디지틀"]
+        # test_keywords = ["너까래", "넛까래", "디지털", "디지틀"]
+        test_keywords = ["카냑", "카약", "카츄샤", "카튜샤", "플라스마", "플라즈마", "리본", "리봉", "스카웃", "스카우트", "디지틀", "디지탈"]
         
         results = []
         for tkw in test_keywords:
             print(f"====== {tkw} ======")
             res = convert(tkw)
             kodex_convert(res)
+            print()
     

@@ -62,7 +62,7 @@ def save_to_file(song_list: list, year: str):
     print("save_to_file... ", year)
     file_path = "rank_title_artist"
     # file_path = "rank_title_artist_album"
-    with open(f"./result/{GENRE}_{year}_melon_chart.csv", "w", encoding="utf-8-sig") as file:
+    with open(f"./{GENRE}_{year}_melon_chart.csv", "w", encoding="utf-8-sig") as file:
         wr = csv.writer(file)
         # wr.writerow(["rank", "title", "artist", "album"])
         wr.writerow(["rank", "title", "artist"])
@@ -93,19 +93,30 @@ if __name__ == "__main__":
     for thread in threads:
         thread.join()
     
-    print(f"thread 모든 작업({len(threads)}개) 종료, {round(time.time()-t2, 3)} 초 걸림 !")
+    elasped_t2 = round(time.time()-t2, 3)
+    print(f"thread 모든 작업({len(threads)}개) 종료, {elasped_t2} 초 걸림 !")
+
+    with open("./result_time.csv", "a") as f2:
+        wr2 = csv.writer(f2)
+        wr2.writerow(["thread", GENRE, len(threads), elasped_t2])
 
 
-    # ## 스레드x
-    # print("--without threads--")
-    # t1 = time.time()
+    ## 스레드x
+    print("--without threads--")
+    t1 = time.time()
 
-    # for yr in range(yr_start, yr_end+1):
-    #     chromedriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    #     year = str(yr)
-    #     song_list = get_year_chart(chromedriver, year)
-    #     # save_to_file(song_list, year)
+    for yr in range(yr_start, yr_end+1):
+        chromedriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        year = str(yr)
+        song_list = get_year_chart(chromedriver, year)
+        # save_to_file(song_list, year)
 
 
-    # print(f"모든 작업 종료, {round(time.time()-t1, 3)} 초 걸림 !")
-    # print("==="*20)
+    elasped_t1 = round(time.time()-t1, 3)
+
+    print(f"모든 작업 종료, {round(elasped_t1, 3)} 초 걸림 !")
+    print("==="*20)
+
+    with open("./result_time.csv", "a") as f1:
+        wr1 = csv.writer(f1)
+        wr1.writerow(["normal", GENRE, len(threads), elasped_t1])
